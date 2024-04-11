@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import traceback
-import pathlib
 import os
+import pathlib
 import sys
+import traceback
 
 
 def extract_tb(tb, *, limit=None) -> list[tuple[str, int, str]]:
