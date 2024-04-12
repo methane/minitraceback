@@ -1,12 +1,11 @@
 from __future__ import annotations
 
+import itertools
 import os
 import pathlib
 import sys
 import traceback
-import itertools
 from typing import NamedTuple
-
 
 TRACEBACK_HEADER = "Traceback (most recent call first):"
 
