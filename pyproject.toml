@@ -1,7 +1,7 @@
 [project]
 name = "minitraceback"
 version = "0.1.0"
-description = "Add your description here"
+description = "A minimal traceback formatter for Python."
 authors = [
     { name = "Inada Naoki", email = "songofacandy@gmail.com" }
 ]
