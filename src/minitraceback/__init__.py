@@ -55,13 +55,46 @@ def extract_stack(f, /, *, limit: int | None = None) -> list[FrameInfo]:
     return _extract_from(frames)
 
 
-def format_frames(frames: list[FrameInfo], *, indent=0) -> list[str]:
+def format_list(frames: list[FrameInfo], *, indent=0) -> list[str]:
     """Format a list of FrameInfo into a list of strings.
 
     Format is 'filename:lineno funcname'.
     """
     sindent = " " * indent
     return [f"{sindent}{f}:{lineno} {name}" for f, lineno, name in frames]
+
+
+def format_tb(tb, /, *, limit=None) -> list[str]:
+    """Format a traceback from a traceback object."""
+    return format_list(extract_tb(tb, limit=limit), indent=2)
+
+
+def print_tb(tb, /, *, limit=None, file=None):
+    """Print a traceback from a traceback object."""
+    if file is None:
+        file = sys.stderr
+    print(TRACEBACK_HEADER, file=file)
+    for line in format_tb(tb, limit=limit):
+        print(line, file=file)
+
+
+def format_stack(f=None, /, *, limit=None) -> list[str]:
+    """Format a stack trace from a frame object."""
+    if f is None:
+        f = sys._getframe().f_back
+    lines = [TRACEBACK_HEADER] + format_list(extract_stack(f, limit=limit), indent=2)
+    return lines
+
+
+def print_stack(f=None, /, *, limit=None, file=None):
+    """Print a stack trace from a frame object."""
+    if f is None:
+        f = sys._getframe().f_back
+    if file is None:
+        file = sys.stderr
+    print(TRACEBACK_HEADER, file=file)
+    for line in format_list(extract_stack(f, limit=limit), indent=2):
+        print(line, file=file)
 
 
 def format_exception_only(exc: BaseException) -> list[str]:
@@ -88,5 +121,12 @@ def format_exception(exc, /, *, limit=None) -> list[str]:
     return [
         *format_exception_only(exc),
         TRACEBACK_HEADER,
-        *format_frames(tbs, indent=2),
+        *format_list(tbs, indent=2),
     ]
+
+
+def print_exception(exc, /, *, limit=None, file=None):
+    """Print an exception and its traceback."""
+    if file is None:
+        file = sys.stderr
+    print("\n".join(format_exception(exc, limit=limit)), file=file)
