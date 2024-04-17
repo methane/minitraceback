@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import itertools
 import os
-import pathlib
 import sys
 import traceback
 from typing import NamedTuple
@@ -17,7 +16,7 @@ class FrameInfo(NamedTuple):
 
 
 def _extract_from(gen) -> list[FrameInfo]:
-    paths = [os.path.abspath(p) for p in sys.path]
+    paths = [os.path.abspath(p) + "/" for p in sys.path]
     paths.sort(key=len, reverse=True)
 
     result: list[FrameInfo] = []
@@ -27,13 +26,10 @@ def _extract_from(gen) -> list[FrameInfo]:
         if not filename:
             filename = "?"
         elif not filename.startswith("<"):
-            fp = pathlib.Path(filename)
             for p in paths:
-                try:
-                    filename = str(fp.relative_to(p, walk_up=False))
+                if filename.startswith(p):
+                    filename = filename.removeprefix(p)
                     break
-                except ValueError:
-                    continue
         result.append(FrameInfo(filename, lineno, c.co_name))
 
     return result
