@@ -1,6 +1,6 @@
 [project]
 name = "minitraceback"
-version = "0.1.1"
+version = "0.1.2"
 description = "A minimal traceback formatter for Python."
 authors = [
     { name = "Inada Naoki", email = "songofacandy@gmail.com" }
@@ -27,6 +27,16 @@ allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/minitraceback"]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "/.github",
+    "/tests",
+    "/uv.lock",
+    "/.python-version",
+    "/.pre-commit-config.yaml",
+    ".gitignore"
+]
 
 [tool.ruff]
 target-version = "py39"
